@@ -1,3 +1,5 @@
 python-dotenv
 colorlog
 requests
+py-cord
+gitpython
