@@ -12,7 +12,7 @@ import git
 from platform import system
 
 import TBAClient
-from TBAClient import Team
+from TBAClient import Team, Event
 import update as upd
 
 # 機器人
@@ -301,7 +301,7 @@ async def e_info(ctx,
                  活動代碼: Option(str, "指定的活動代碼", required=True),
                  私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
     await ctx.defer()
-    m_event = TBAClient.Event(活動代碼)
+    m_event = Event(活動代碼)
     try:
         m_event_info = m_event.get_info()
         real_logger.debug(m_event_info)
