@@ -9,9 +9,11 @@ import json
 import datetime
 import time
 import git
+from platform import system
 
 import TBAClient
 from TBAClient import Team
+import update as upd
 
 # 機器人
 intents = discord.Intents.all()
@@ -149,6 +151,21 @@ async def about(ctx,
     year = time.strftime("%Y")
     embed.set_footer(text=f"©Allen Why, {year} | 版本：commit {sha[:7]}")
     await ctx.respond(embed=embed, ephemeral=私人訊息)
+
+
+@bot.slash_command(name="update", description="更新機器人。")
+async def update(ctx,
+                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+    if ctx.author == bot.get_user(657519721138094080):
+        embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
+        event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
+        await bot.change_presence(status=discord.Status.idle, activity=event)
+        upd.update(os.getpid(), system())
+    else:
+        embed = discord.Embed(title="錯誤", description="你沒有權限使用此指令。", color=error_color)
+        私人訊息 = True
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
 team = bot.create_group(name="team", description="取得隊伍相關資訊")
