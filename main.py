@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import logging
 from colorlog import ColoredFormatter
 import json
+import datetime
 
 import TBAClient
 from TBAClient import Team
@@ -199,7 +200,8 @@ async def media(ctx,
                                 value=f"[{i['foreign_key']}](https://twitter.com/{i['foreign_key']})",
                                 inline=False)
     else:
-        embed.add_field(name="沒有找到任何社交媒體資料。", value="該隊伍似乎沒有在TBA上登錄任何社交媒體資料。", inline=False)
+        embed.add_field(name="沒有找到任何社交媒體資料。", value="該隊伍似乎沒有在TBA上登錄任何社交媒體資料。",
+                        inline=False)
     embed.set_thumbnail(url=await get_avatar(隊號))
     embed.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
     await ctx.respond(embed=embed, ephemeral=私人訊息)
@@ -236,7 +238,51 @@ async def awards(ctx,
     await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
-# @bot.slash_command(name="event", description="顯示幫助訊息。")
+event = bot.create_group(name="event", description="顯示指定活動的資訊。")
+
+
+@event.command(name="what_is_event_key", description="什麼是活動代碼？")
+async def what_is_event_key(ctx,
+                            私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+    embed = discord.Embed(title="什麼是活動代碼？", description="FRC的每場活動，如區域賽等，皆有自己的「活動代碼」。",
+                          color=default_color)
+    embed.add_field(name="從TBA取得活動代碼", value="在TBA中打開任何一場活動，並查看網址列。\n網址列中的「event/」後面的字串即為該活動的活動代碼。")
+    embed.add_field(name="從FRC Events取得活動代碼", value="在FRC Events中打開任何一場活動，並查看網址列。\n網址列中的「...inspires.org/」後面的"
+                                                    "數字為年分，而在數字後方的則為名稱縮寫。\n將年分與名稱縮寫結合，即為該活動的活動代碼。")
+    embed.set_image(url="https://media.discordapp.net/attachments/1099274376005816320/1100208334927306852/"
+                        "e3bcfb95abc83921.png")
+    await ctx.respond(embed=embed, ephemeral=私人訊息)
+
+
+@event.command(name="info", description="取得指定活動的資訊。")
+async def e_info(ctx,
+                 活動代碼: Option(str, "指定的活動代碼", required=True),
+                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+    await ctx.defer()
+    m_event = TBAClient.Event(活動代碼)
+    try:
+        m_event_info = m_event.get_info()
+        real_logger.debug(m_event_info)
+    except ValueError as e:
+        embed = discord.Embed(title="錯誤", description="找不到指定的活動。", color=error_color)
+        embed.add_field(name="不知道什麼是活動代碼嗎？", value="請使用</event what_is_event_key:1099893824479821934>指令來取得說明。",
+                        inline=False)
+        embed.add_field(name="錯誤訊息", value=str(e), inline=False)
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
+        return
+    embed = discord.Embed(title=f"活動 {活動代碼} 的資訊", url=f"https://www.thebluealliance.com/event/{活動代碼}",
+                          color=default_color)
+    embed.add_field(name="名稱", value=m_event_info["name"], inline=False)
+    embed.add_field(name="類型", value=m_event_info["event_type_string"], inline=False)
+    start_date_unix = int(datetime.datetime.timestamp(datetime.datetime.strptime(m_event_info["start_date"],
+                                                                                 "%Y-%m-%d")))
+    end_date_unix = int(datetime.datetime.timestamp(datetime.datetime.strptime(m_event_info["end_date"],
+                                                                               "%Y-%m-%d")))
+    embed.add_field(name="地點", value=f"[{m_event_info['location_name']}]({m_event_info['gmaps_url']})", inline=False)
+    embed.add_field(name="日期", value=f"<t:{start_date_unix}:D> ~ <t:{end_date_unix}:D> *(時區可能不正確)*", inline=False)
+    embed.add_field(name="活動網站", value=m_event_info['website'], inline=False)
+    embed.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
+    await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
 bot.run(TOKEN)

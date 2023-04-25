@@ -70,8 +70,23 @@ class Team:
         else:
             return r
 
-    def get_event(self, event_key: str):
-        r = requests.get(TBA_api_url + "/event/" + event_key, headers=TBA_api_key).json()
+
+def get_event_keys(year: int):
+    r = requests.get(TBA_api_url + "/events/" + str(year) + "/keys", headers=TBA_api_key).json()
+    if r:
+        return r
+    else:
+        raise ValueError("No events found")
+
+
+class Event:
+    def __init__(self, event_key: str):
+        self.key = event_key
+        self.TBA_url = TBA_api_url + "event/" + str(self.key)
+        self.FRC_url = FRC_api_url
+
+    def get_info(self):
+        r = requests.get(self.TBA_url, headers=TBA_api_key).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
@@ -79,10 +94,4 @@ class Team:
 
 
 if __name__ == "__main__":
-    t = Team(3015)
-    # awards = t.get_awards()
-    # a_list = awards[-1]["recipient_list"]
-    # for i in a_list:
-    #     if i["team_key"] == "frc7636":
-    #         print(i)
-    print(t.get_awards())
+    print(get_event_keys(2023))
