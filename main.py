@@ -7,6 +7,8 @@ import logging
 from colorlog import ColoredFormatter
 import json
 import datetime
+import time
+import git
 
 import TBAClient
 from TBAClient import Team
@@ -123,6 +125,29 @@ async def ping(ctx,
                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
     embed = discord.Embed(title="PONG!✨", color=default_color)
     embed.add_field(name="PING值", value=f"`{round(bot.latency * 1000)}` ms")
+    await ctx.respond(embed=embed, ephemeral=私人訊息)
+
+
+@bot.slash_command(name="about", description="提供關於這隻機器人的資訊。")
+async def about(ctx,
+                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+    embed = discord.Embed(title="關於", color=default_color)
+    embed.set_thumbnail(url=bot.user.display_avatar)
+    embed.add_field(name="程式碼與授權", value="本機器人由<@657519721138094080>維護，使用[Py-cord]"
+                                         "(https://github.com/Pycord-Development/pycord)、"
+                                         "[TBA](https://www.thebluealliance.com/apidocs/v3)、"
+                                         "[FRC API](https://frc-api-docs.firstinspires.org/)進行開發。\n"
+                                         "本機器人的程式碼及檔案皆可在[這裡](https://github.com/Alllen95Wei/"
+                                         "Discord-FRC-Bot)查看。",
+                    inline=True)
+    embed.add_field(name="聯絡", value="如果有任何技術問題及建議，請聯絡<@657519721138094080>。", inline=True)
+    repo = git.Repo(search_parent_directories=True)
+    update_msg = repo.head.reference.commit.message
+    raw_sha = repo.head.object.hexsha
+    sha = raw_sha[:7]
+    embed.add_field(name=f"分支訊息：{sha}", value=update_msg, inline=False)
+    year = time.strftime("%Y")
+    embed.set_footer(text=f"©Allen Why, {year} | 版本：commit {sha[:7]}")
     await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
