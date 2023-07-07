@@ -96,16 +96,16 @@ real_logger = CreateLogger()
 
 
 async def get_avatar(team_no):
-    with open(os.path.join(base_dir, "avatar2022.json"), "r") as f:
+    with open(os.path.join(base_dir, "avatar2023.json"), "r") as f:
         avatar_dict = json.loads(f.read())
     if str(team_no) in avatar_dict:
         return avatar_dict[str(team_no)]
     else:
-        m_team_avatar = TBAClient.Team(team_no).get_avatar(2022)
+        m_team_avatar = TBAClient.Team(team_no).get_avatar(2023)
     if m_team_avatar is not None:
         uploaded_avatar = await bot.get_channel(1099274376005816320).send(file=discord.File(m_team_avatar))
         uploaded_avatar_url = uploaded_avatar.attachments[0].url
-        with open(os.path.join(base_dir, "avatar2022.json"), "w") as f:
+        with open(os.path.join(base_dir, "avatar2023.json"), "w") as f:
             avatar_dict[team_no] = uploaded_avatar_url
             f.write(json.dumps(avatar_dict))
         os.remove(m_team_avatar)
@@ -159,8 +159,8 @@ async def update(ctx,
     if ctx.author == bot.get_user(657519721138094080):
         embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
         await ctx.respond(embed=embed, ephemeral=私人訊息)
-        event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
-        await bot.change_presence(status=discord.Status.idle, activity=event)
+        update_event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
+        await bot.change_presence(status=discord.Status.idle, activity=update_event)
         upd.update(os.getpid(), system())
     else:
         embed = discord.Embed(title="錯誤", description="你沒有權限使用此指令。", color=error_color)
@@ -188,7 +188,7 @@ async def info(ctx,
     embed = discord.Embed(title=f"FRC #{隊號} 的基本資料", url=f"https://www.thebluealliance.com/team/{隊號}",
                           color=default_color)
     embed.add_field(name="隊名", value=m_team_info["nickname"], inline=False)
-    embed.add_field(name="地區", value=f"{m_team_info['city']}, {m_team_info['country']}, {m_team_info['state_prov']}",
+    embed.add_field(name="地區", value=f"{m_team_info['city']}, {m_team_info['state_prov']}, {m_team_info['country']}",
                     inline=False)
     embed.add_field(name="創隊年份", value=m_team_info["rookie_year"], inline=False)
     embed.add_field(name="全名", value=m_team_info["name"], inline=False)
