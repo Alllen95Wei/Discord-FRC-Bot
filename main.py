@@ -124,7 +124,7 @@ async def on_ready():
 
 @bot.slash_command(name="ping", description="查詢機器人PING值(ms)。")
 async def ping(ctx,
-               私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+               私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     embed = discord.Embed(title="PONG!✨", color=default_color)
     embed.add_field(name="PING值", value=f"`{round(bot.latency * 1000)}` ms")
     await ctx.respond(embed=embed, ephemeral=私人訊息)
@@ -132,7 +132,7 @@ async def ping(ctx,
 
 @bot.slash_command(name="about", description="提供關於這隻機器人的資訊。")
 async def about(ctx,
-                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     embed = discord.Embed(title="關於", color=default_color)
     embed.set_thumbnail(url=bot.user.display_avatar)
     embed.add_field(name="程式碼與授權", value="本機器人由<@657519721138094080>維護，使用[Py-cord]"
@@ -155,7 +155,7 @@ async def about(ctx,
 
 @bot.slash_command(name="update", description="更新機器人。")
 async def update(ctx,
-                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     if ctx.author == bot.get_user(657519721138094080):
         embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
         await ctx.respond(embed=embed, ephemeral=私人訊息)
@@ -164,7 +164,7 @@ async def update(ctx,
         upd.update(os.getpid(), system())
     else:
         embed = discord.Embed(title="錯誤", description="你沒有權限使用此指令。", color=error_color)
-        私人訊息 = True
+        私人訊息 = True  # noqa
         await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
@@ -173,8 +173,8 @@ team = bot.create_group(name="team", description="取得隊伍相關資訊")
 
 @team.command(name="info", description="取得隊伍的基本資料。")
 async def info(ctx,
-               隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),
-               私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+               隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
+               私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     await ctx.defer()
     m_team = Team(隊號)
     try:
@@ -202,8 +202,8 @@ async def info(ctx,
 
 @team.command(name="media", description="取得隊伍的社交媒體連結。")
 async def media(ctx,
-                隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),
-                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
+                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     m_team = Team(隊號)
     await ctx.defer()
     try:
@@ -251,8 +251,8 @@ async def media(ctx,
 
 @team.command(name="awards", description="取得隊伍曾獲得的獎項。")
 async def awards(ctx,
-                 隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),
-                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                 隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
+                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     await ctx.defer()
     m_team = Team(隊號)
     try:
@@ -285,7 +285,7 @@ event = bot.create_group(name="event", description="顯示指定活動的資訊�
 
 @event.command(name="what_is_event_key", description="什麼是活動代碼？")
 async def what_is_event_key(ctx,
-                            私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                            私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     embed = discord.Embed(title="什麼是活動代碼？", description="FRC的每場活動，如區域賽等，皆有自己的「活動代碼」。",
                           color=default_color)
     embed.add_field(name="從TBA取得活動代碼", value="在TBA中打開任何一場活動，並查看網址列。\n網址列中的「event/」後面的字串即為該活動的活動代碼。")
@@ -298,8 +298,8 @@ async def what_is_event_key(ctx,
 
 @event.command(name="info", description="取得指定活動的資訊。")
 async def e_info(ctx,
-                 活動代碼: Option(str, "指定的活動代碼", required=True),
-                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):
+                 活動代碼: Option(str, "指定的活動代碼", required=True),  # noqa
+                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     await ctx.defer()
     m_event = Event(活動代碼)
     try:
