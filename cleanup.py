@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from update import kill_running_bot
 from platform import system
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 bot = commands.Bot(intents=intents, help_command=None)
 
 
