@@ -16,7 +16,7 @@ from TBAClient import Team, Event
 import update as upd
 
 # 機器人
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 bot = commands.Bot(intents=intents, help_command=None)
 # 常用物件、變數
 default_color = 0x012a5e
@@ -218,29 +218,27 @@ async def media(ctx,
     if m_team_media:
         for i in m_team_media:
             if i["type"] == "facebook-profile":
-                embed.add_field(name="Facebook",
+                embed.add_field(name="<:FB:1168913758228332564>Facebook",
                                 value=f"[{i['foreign_key']}](https://facebook.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "instagram-profile":
-                embed.add_field(name="Instagram",
+                embed.add_field(name="<:IG:1168914317505204254>Instagram",
                                 value=f"[{i['foreign_key']}](https://instagram.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "twitter-profile":
-                embed.add_field(name="Twitter",
+                embed.add_field(name="<:X_:1169059751695503490>Twitter",
                                 value=f"[{i['foreign_key']}](https://twitter.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "youtube-channel":
-                embed.add_field(name="YouTube",
+                embed.add_field(name="<:YT:1168914645466222643>YouTube",
                                 value=f"[{i['foreign_key']}](https://youtube.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "github-profile":
-                embed.add_field(name="GitHub",
+                embed.add_field(name="<:GitHub:1169059505301094431>GitHub",
                                 value=f"[{i['foreign_key']}](https://github.com/{i['foreign_key']})",
                                 inline=False)
-            elif i["type"] == "twitter-profile":
-                embed.add_field(name="Twitter",
-                                value=f"[{i['foreign_key']}](https://twitter.com/{i['foreign_key']})",
-                                inline=False)
+            else:
+                embed.add_field(name=f"其它({i['type']})", value=i["foreign_key"], inline=False)
     else:
         embed.add_field(name="沒有找到任何社交媒體資料。", value="該隊伍似乎沒有在TBA上登錄任何社交媒體資料。",
                         inline=False)
@@ -251,33 +249,57 @@ async def media(ctx,
 
 @team.command(name="awards", description="取得隊伍曾獲得的獎項。")
 async def awards(ctx,
-                 隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
-                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
+                 隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True)):  # noqa
     await ctx.defer()
     m_team = Team(隊號)
+    avatar = await get_avatar(隊號)
     try:
         m_team_awards = m_team.get_awards()
         real_logger.debug(m_team_awards)
+        embed = discord.Embed(title=f"FRC #{隊號} 的獎項", url=f"https://www.thebluealliance.com/team/{隊號}/history",
+                              description="隊伍的獎項將列於下方。", color=default_color)
+        embed.set_thumbnail(url=avatar)
+        await ctx.respond(embed=embed)
     except ValueError as e:
         embed = discord.Embed(title="錯誤", description="找不到指定的隊伍。", color=error_color)
         embed.add_field(name="錯誤訊息", value=str(e))
-        await ctx.respond(embed=embed, ephemeral=私人訊息)
+        await ctx.respond(embed=embed)
         return
-    embed = discord.Embed(title=f"FRC #{隊號} 的獎項", url=f"https://www.thebluealliance.com/team/{隊號}/history",
-                          color=default_color)
-    if m_team_awards:
+    if m_team_awards and len(m_team_awards) <= 25:
+        embed = discord.Embed(title=f"FRC #{隊號} 的獎項(1/1)", url=f"https://www.thebluealliance.com/team/{隊號}/history",
+                              color=default_color)
         for i in m_team_awards:
             text = f"[{i['event_key']}](https://www.thebluealliance.com/event/{i['event_key']})"
             for n in i["recipient_list"]:
                 if n["team_key"] == f"frc{隊號}" and n["awardee"] is not None:
                     text += f" ({n['awardee']})"
-            embed.add_field(name=i["name"],
-                            value=text)
+            embed.add_field(name=i["name"], value=text)
+        embeds_list = [embed]
+    elif m_team_awards and len(m_team_awards) > 25:
+        embeds_list = []
+        pages_count = int(len(m_team_awards)/25)+1
+        for j in range(pages_count):
+            temp_team_awards = m_team_awards[:25]
+            embed = discord.Embed(title=f"FRC #{隊號} 的獎項({j+1}/{pages_count})",
+                                  url=f"https://www.thebluealliance.com/team/{隊號}/history",
+                                  color=default_color)
+            for i in temp_team_awards:
+                text = f"[{i['event_key']}](https://www.thebluealliance.com/event/{i['event_key']})"
+                for n in i["recipient_list"]:
+                    if n["team_key"] == f"frc{隊號}" and n["awardee"] is not None:
+                        text += f" ({n['awardee']})"
+                embed.add_field(name=i["name"], value=text)
+                m_team_awards.remove(i)
+            embeds_list.append(embed)
     else:
+        embed = discord.Embed(title=f"FRC #{隊號} 的獎項", url=f"https://www.thebluealliance.com/team/{隊號}/history",
+                              color=default_color)
         embed.add_field(name="沒有找到任何獎項資料。", value="該隊伍似乎尚未獲得任何獎項。", inline=False)
-    embed.set_thumbnail(url=await get_avatar(隊號))
-    embed.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
-    await ctx.respond(embed=embed, ephemeral=私人訊息)
+        embeds_list = [embed]
+    for e in embeds_list:
+        e.set_thumbnail(url=await get_avatar(隊號))
+        e.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
+        await ctx.channel.send(embed=e)
 
 
 event = bot.create_group(name="event", description="顯示指定活動的資訊。")
