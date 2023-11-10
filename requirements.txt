@@ -3,3 +3,4 @@ colorlog
 requests
 py-cord
 gitpython
+tzdata

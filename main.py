@@ -8,6 +8,7 @@ from colorlog import ColoredFormatter
 import json
 import datetime
 import time
+import zoneinfo
 import git
 from platform import system
 
@@ -22,6 +23,7 @@ bot = commands.Bot(intents=intents, help_command=None)
 default_color = 0x012a5e
 error_color = 0xF1411C
 base_dir = os.path.abspath(os.path.dirname(__file__))
+now_tz = zoneinfo.ZoneInfo("Asia/Taipei")
 # 載入TOKEN
 load_dotenv(dotenv_path=os.path.join(base_dir, "TOKEN.env"))
 TOKEN = str(os.getenv("TOKEN"))
@@ -31,12 +33,11 @@ class CreateLogger:
     def __init__(self):
         super().__init__()
         self.c_logger = self.color_logger()
-        self.f_logger = self.file_logger()
 
     @staticmethod
     def color_logger():
         formatter = ColoredFormatter(
-            fmt="%(white)s[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
+            fmt="%(white)s[%(asctime)s] %(log_color)s%(levelname)-10s%(reset)s %(blue)s%(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             reset=True,
             log_colors={
@@ -52,43 +53,31 @@ class CreateLogger:
         handler = logging.StreamHandler()
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
-
-        return logger
-
-    @staticmethod
-    def file_logger():
-        formatter = logging.Formatter(
-            fmt="[%(asctime)s] %(levelname)-8s %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S")
-
-        logger = logging.getLogger()
-        handler = logging.FileHandler("logs.log", encoding="utf-8")
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+        log_path = os.path.join(base_dir, "logs",
+                                f"logs {datetime.datetime.now(tz=now_tz).strftime('%Y.%m.%d %H.%M.%S')}.log")
+        with open(log_path, "w"):
+            pass
+        f_handler = logging.FileHandler(log_path, encoding="utf-8")
+        f_handler.setFormatter(formatter)
+        logger.addHandler(f_handler)
         logger.setLevel(logging.DEBUG)
 
         return logger
 
     def debug(self, message: str):
         self.c_logger.debug(message)
-        self.f_logger.debug(message)
 
     def info(self, message: str):
         self.c_logger.info(message)
-        self.f_logger.info(message)
 
     def warning(self, message: str):
         self.c_logger.warning(message)
-        self.f_logger.warning(message)
 
     def error(self, message: str):
         self.c_logger.error(message)
-        self.f_logger.error(message)
 
     def critical(self, message: str):
         self.c_logger.critical(message)
-        self.f_logger.critical(message)
 
 
 # 建立logger
