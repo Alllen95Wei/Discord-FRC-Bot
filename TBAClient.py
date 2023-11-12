@@ -37,7 +37,7 @@ class Team:
             return r
 
     def get_avatar(self, year: int):
-        r = requests.get(url=f"{self.FRC_url}{year}/avatars?teamNumber={self.id}", headers=FRC_api_key,
+        r = requests.get(url=f"{self.FRC_url}{year}/avatars?teamNumber={self.id}", headers=FRC_api_key, timeout=10,
                              data={})
         if r.status_code == 200:
             print(r.json())
