@@ -23,14 +23,14 @@ class Team:
         self.FRC_url = FRC_api_url
 
     def get_basic_info(self):
-        r = requests.get(self.TBA_url + "/simple", headers=TBA_api_key).json()
+        r = requests.get(self.TBA_url + "/simple", headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
             return r
 
     def get_info(self):
-        r = requests.get(self.TBA_url, headers=TBA_api_key).json()
+        r = requests.get(self.TBA_url, headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
@@ -57,14 +57,14 @@ class Team:
             return None
 
     def get_social_media(self):
-        r = requests.get(self.TBA_url + "/social_media", headers=TBA_api_key).json()
+        r = requests.get(self.TBA_url + "/social_media", headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
             return r
 
     def get_awards(self):
-        r = requests.get(self.TBA_url + "/awards", headers=TBA_api_key).json()
+        r = requests.get(self.TBA_url + "/awards", headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
@@ -72,7 +72,7 @@ class Team:
 
 
 def get_event_keys(year: int):
-    r = requests.get(TBA_api_url + "/events/" + str(year) + "/keys", headers=TBA_api_key).json()
+    r = requests.get(TBA_api_url + "/events/" + str(year) + "/keys", headers=TBA_api_key, timeout=10).json()
     if r:
         return r
     else:
@@ -86,7 +86,7 @@ class Event:
         self.FRC_url = FRC_api_url
 
     def get_info(self):
-        r = requests.get(self.TBA_url, headers=TBA_api_key).json()
+        r = requests.get(self.TBA_url, headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
