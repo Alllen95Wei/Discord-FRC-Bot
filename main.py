@@ -145,7 +145,7 @@ async def about(ctx,
 @bot.slash_command(name="update", description="更新機器人。")
 async def update(ctx,
                  私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
-    if ctx.author == bot.get_user(657519721138094080):
+    if ctx.author.id == 657519721138094080:
         embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
         await ctx.respond(embed=embed, ephemeral=私人訊息)
         update_event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
