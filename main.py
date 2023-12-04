@@ -108,7 +108,8 @@ async def on_ready():
     real_logger.info("機器人準備完成！")
     real_logger.info(f"PING值：{round(bot.latency * 1000)}ms")
     real_logger.info(f"登入身分：{bot.user.name}#{bot.user.discriminator}")
-    await bot.change_presence(status=discord.Status.dnd)
+    activity = discord.Activity(type=discord.ActivityType.watching, name="FRC")
+    await bot.change_presence(activity=activity)
 
 
 @bot.slash_command(name="ping", description="查詢機器人PING值(ms)。")
