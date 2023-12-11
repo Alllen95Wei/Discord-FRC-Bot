@@ -112,7 +112,8 @@ async def on_ready():
     await bot.change_presence(activity=activity)
 
 
-@bot.slash_command(name="ping", description="查詢機器人PING值(ms)。")
+@bot.slash_command(name="ping", description="Gets bot's latency in ms.",
+                   description_localizations={"zh-TW": "取得機器人的延遲。"})
 async def ping(ctx,
                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     embed = discord.Embed(title="PONG!✨", color=default_color)
@@ -120,7 +121,8 @@ async def ping(ctx,
     await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
-@bot.slash_command(name="about", description="提供關於這隻機器人的資訊。")
+@bot.slash_command(name="about", description="Provides information about this robot.",
+                   description_localizations={"zh-TW": "提供關於這隻機器人的資訊。"})
 async def about(ctx,
                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     embed = discord.Embed(title="關於", color=default_color)
@@ -158,12 +160,16 @@ async def update(ctx,
         await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
-team = bot.create_group(name="team", description="取得隊伍相關資訊")
+team = bot.create_group(name="team", description="Gets information about the team.",
+                        description_localizations={"zh-TW": "取得隊伍相關資訊。"})
 
 
-@team.command(name="info", description="取得隊伍的基本資料。")
+@team.command(name="info", description="Gets basic information about the team.",
+              description_localizations={"zh-TW": "取得隊伍的基本資料。"})
 async def info(ctx,
-               隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
+               隊號: Option(int, min_value=1, max_value=9999, required=True,   # noqa
+                          name="team_no", name_localizations={"zh-TW": "隊號"},
+                          description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"}),
                私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     await ctx.defer()
     m_team = Team(隊號)
@@ -190,9 +196,12 @@ async def info(ctx,
     await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
-@team.command(name="media", description="取得隊伍的社交媒體連結。")
+@team.command(name="media", description="Gets social media links of the team.",
+              description_localizations={"zh-TW": "取得隊伍的社交媒體連結。"})
 async def media(ctx,
-                隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True),  # noqa
+                隊號: Option(int, min_value=1, max_value=9999, required=True,  # noqa
+                             name="team_no", name_localizations={"zh-TW": "隊號"},
+                             description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"}),
                 私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     m_team = Team(隊號)
     await ctx.defer()
@@ -216,7 +225,7 @@ async def media(ctx,
                                 value=f"[{i['foreign_key']}](https://instagram.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "twitter-profile":
-                embed.add_field(name="<:X_:1169059751695503490>Twitter",
+                embed.add_field(name="<:X_:1169059751695503490>Twitter (X)",
                                 value=f"[{i['foreign_key']}](https://twitter.com/{i['foreign_key']})",
                                 inline=False)
             elif i["type"] == "youtube-channel":
@@ -239,7 +248,9 @@ async def media(ctx,
 
 @team.command(name="awards", description="取得隊伍曾獲得的獎項。")
 async def awards(ctx,
-                 隊號: Option(int, "指定的FRC隊伍", min_value=1, max_value=9999, required=True)):  # noqa
+                 隊號: Option(int, min_value=1, max_value=9999, required=True,  # noqa
+                              name="team_no", name_localizations={"zh-TW": "隊號"},
+                              description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"})):
     await ctx.defer()
     m_team = Team(隊號)
     avatar = await get_avatar(隊號)
@@ -308,9 +319,13 @@ async def what_is_event_key(ctx,
     await ctx.respond(embed=embed, ephemeral=私人訊息)
 
 
-@event.command(name="info", description="取得指定活動的資訊。")
+@event.command(name="info", description="Gets information about the event.",
+               description_localizations={"zh-TW": "取得指定活動的資訊。"})
 async def e_info(ctx,
-                 活動代碼: Option(str, "指定的活動代碼", required=True),  # noqa
+                 活動代碼: Option(str, required=True,   # noqa
+                              name="event_key", name_localizations={"zh-TW": "活動代碼"},
+                              description="FRC event key. Use /event what_is_event_key to get help.",
+                              description_localizations={"zh-TW": "FRC活動代碼。使用/event what_is_event_key指令來取得說明。"}),
                  私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
     await ctx.defer()
     m_event = Event(活動代碼)
