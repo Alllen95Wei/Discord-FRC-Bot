@@ -15,7 +15,7 @@ def get_update_files():
 
 
 def restart_running_bot(pid, os):
-    subprocess.Popen("python main.py", creationflags=subprocess.CREATE_NEW_CONSOLE)
+    subprocess.Popen("run_in_robomania.bat", creationflags=subprocess.CREATE_NEW_CONSOLE)
     kill_running_bot(pid, os)
 
 
