@@ -29,6 +29,8 @@ load_dotenv(dotenv_path=os.path.join(base_dir, "TOKEN.env"))
 TOKEN = str(os.getenv("TOKEN"))
 
 
+# 測試伺服器更新
+
 class CreateLogger:
     def __init__(self):
         super().__init__()
