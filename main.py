@@ -57,8 +57,11 @@ class CreateLogger:
                                 f"logs {datetime.datetime.now(tz=now_tz).strftime('%Y.%m.%d %H.%M.%S')}.log")
         with open(log_path, "w"):
             pass
+        f_formatter = logging.Formatter(
+            fmt="[%(asctime)s] %(levelname)-10s %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S")
         f_handler = logging.FileHandler(log_path, encoding="utf-8")
-        f_handler.setFormatter(formatter)
+        f_handler.setFormatter(f_formatter)
         logger.addHandler(f_handler)
         logger.setLevel(logging.DEBUG)
 
@@ -352,6 +355,66 @@ async def e_info(ctx,
     embed.add_field(name="活動網站", value=m_event_info['website'], inline=False)
     embed.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
     await ctx.respond(embed=embed, ephemeral=私人訊息)
+
+
+@event.command(name="teams", description="Get a list of the teams participating in the event.",
+               description_localizations={"zh-TW": "取得參加該比賽的隊伍清單。"})
+async def e_teams(ctx,
+                  活動代碼: Option(str, required=True,   # noqa
+                  name="event_key", name_localizations={"zh-TW": "活動代碼"},
+                  description="FRC event key. Use /event what_is_event_key to get help.",
+                  description_localizations={"zh-TW": "FRC活動代碼。使用/event what_is_event_key指令來取得說明。"}),
+                  私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
+    await ctx.defer()
+    m_event = Event(活動代碼)
+    try:
+        m_event_teams = m_event.get_team_list()
+        embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍",
+                              description=f"參賽的隊伍(共`{len(m_event_teams)}`支)將列於下方。",
+                              url=f"https://www.thebluealliance.com/event/{活動代碼}",
+                              color=default_color)
+        embed.set_footer(text="如要查看更多資訊，請點選標題連結進入TBA。")
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
+    except ValueError as e:
+        embed = discord.Embed(title="錯誤", description="找不到指定的活動。", color=error_color)
+        embed.add_field(name="不知道什麼是活動代碼嗎？", value="請使用</event what_is_event_key:1099893824479821934>指令來取得說明。",
+                        inline=False)
+        embed.add_field(name="錯誤訊息", value=str(e), inline=False)
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
+        return
+    if m_event_teams and len(m_event_teams) <= 25:
+        embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍(1/1)", url=f"https://www.thebluealliance.com/event/{活動代碼}",
+                              color=default_color)
+        for m_team in m_event_teams:
+            team_no = m_team["team_number"]
+            team_name = m_team["nickname"]
+            team_link = f"https://www.thebluealliance.com/team/{team_no}"
+            embed.add_field(name=team_no, value=f"[{team_name}]({team_link})")
+        embeds_list = [embed]
+    elif m_event_teams and len(m_event_teams) > 25:
+        embeds_list = []
+        pages_count = int(len(m_event_teams) / 25) + 1
+        for i in range(pages_count):
+            temp_teams = m_event_teams[:25]
+            embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍({i+1}/{pages_count})",
+                                  url=f"https://www.thebluealliance.com/event/{活動代碼}",
+                                  color=default_color)
+            for m_team in temp_teams:
+                team_no = m_team["team_number"]
+                team_name = m_team["nickname"]
+                team_link = f"https://www.thebluealliance.com/team/{team_no}"
+                embed.add_field(name=team_no, value=f"[{team_name}]({team_link})")
+                m_event_teams.remove(m_team)
+            embeds_list.append(embed)
+    else:
+        embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍",
+                              url=f"https://www.thebluealliance.com/event/{活動代碼}",
+                              color=error_color)
+        embed.add_field(name="沒有找到任何參賽隊伍資料。", value="該活動似乎尚未開放報名或更新。", inline=False)
+        embeds_list = [embed]
+    for e in embeds_list:
+        e.set_footer(text="如要查看更多資訊，請點選隊伍名稱進入TBA。")
+        await ctx.channel.send(embed=e)
 
 
 bot.run(TOKEN)

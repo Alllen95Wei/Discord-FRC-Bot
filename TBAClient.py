@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "TOKEN.env"))
 
 
-# TODO: 移除API key
 TBA_api_url = "https://www.thebluealliance.com/api/v3/"
 TBA_api_key = {"X-TBA-Auth-Key": str(os.getenv("TBA_TOKEN"))}
 FRC_api_url = "https://frc-api.firstinspires.org/v3.0/"
@@ -87,6 +86,13 @@ class Event:
 
     def get_info(self):
         r = requests.get(self.TBA_url, headers=TBA_api_key, timeout=10).json()
+        if "Error" in r:
+            raise ValueError(r["Error"])
+        else:
+            return r
+
+    def get_team_list(self):
+        r = requests.get(self.TBA_url + "/teams", headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
         else:
