@@ -197,7 +197,7 @@ async def info(ctx,
         embed.add_field(name="最後活躍年份", value=f"{last_active_year} "
                                              f"([{last_event}](https://www.thebluealliance.com/event/{last_event}))",
                         inline=False)
-    embed.add_field(name="全名", value=m_team_info["name"], inline=False)
+    embed.add_field(name="贊助商", value=m_team_info["name"], inline=False)
     # 取得網頁
     if m_team_info["website"] is not None:
         embed.add_field(name="官方網站", value=m_team_info["website"], inline=False)
