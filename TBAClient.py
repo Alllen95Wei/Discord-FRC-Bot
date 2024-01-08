@@ -69,6 +69,13 @@ class Team:
         else:
             return r
 
+    def get_attended_event_keys(self):
+        r = requests.get(self.TBA_url + "/events/keys", headers=TBA_api_key, timeout=10).json()
+        if "Error" in r:
+            raise ValueError(r["Error"])
+        else:
+            return r
+
 
 def get_event_keys(year: int):
     r = requests.get(TBA_api_url + "/events/" + str(year) + "/keys", headers=TBA_api_key, timeout=10).json()

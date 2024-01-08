@@ -190,6 +190,13 @@ async def info(ctx,
     embed.add_field(name="地區", value=f"{m_team_info['city']}, {m_team_info['state_prov']}, {m_team_info['country']}",
                     inline=False)
     embed.add_field(name="創隊年份", value=m_team_info["rookie_year"], inline=False)
+    events = m_team.get_attended_event_keys()
+    if events:
+        last_event = m_team.get_attended_event_keys()[-1]
+        last_active_year = last_event[:4]
+        embed.add_field(name="最後活躍年份", value=f"{last_active_year} "
+                                             f"([{last_event}](https://www.thebluealliance.com/event/{last_event}))",
+                        inline=False)
     embed.add_field(name="全名", value=m_team_info["name"], inline=False)
     # 取得網頁
     if m_team_info["website"] is not None:
