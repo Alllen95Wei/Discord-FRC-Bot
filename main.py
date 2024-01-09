@@ -97,6 +97,7 @@ async def get_avatar(team_no):
     if m_team_avatar is not None:
         uploaded_avatar = await bot.get_channel(1099274376005816320).send(file=discord.File(m_team_avatar))
         uploaded_avatar_url = uploaded_avatar.attachments[0].url
+        uploaded_avatar_url = uploaded_avatar_url[:uploaded_avatar_url.find("?")]
         with open(os.path.join(base_dir, "avatar2023.json"), "w") as f:
             avatar_dict[team_no] = uploaded_avatar_url
             f.write(json.dumps(avatar_dict))

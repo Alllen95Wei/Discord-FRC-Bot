@@ -39,7 +39,6 @@ class Team:
         r = requests.get(url=f"{self.FRC_url}{year}/avatars?teamNumber={self.id}", headers=FRC_api_key, timeout=10,
                              data={})
         if r.status_code == 200:
-            print(r.json())
             try:
                 raw_text = r.json()["teams"][0]["encodedAvatar"]
             except IndexError:
