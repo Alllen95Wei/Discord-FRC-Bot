@@ -56,16 +56,9 @@ class General(commands.Cog):
     @commands.is_owner()
     async def update(self, ctx,
                      私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
-        if ctx.author.id == 657519721138094080:
-            embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
-            await ctx.respond(embed=embed, ephemeral=私人訊息)
-            update_event = discord.Activity(type=discord.ActivityType.playing, name="更新中...")
-            await self.bot.change_presence(status=discord.Status.idle, activity=update_event)
-            update.get_update_files()
-        else:
-            embed = discord.Embed(title="錯誤", description="你沒有權限使用此指令。", color=error_color)
-            私人訊息 = True  # noqa
-            await ctx.respond(embed=embed, ephemeral=私人訊息)
+        embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
+        await ctx.respond(embed=embed, ephemeral=私人訊息)
+        update.get_update_files()
 
 
 class Event(commands.Cog):
