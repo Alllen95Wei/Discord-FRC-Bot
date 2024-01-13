@@ -30,7 +30,7 @@ class TeamCmd(commands.Cog):
             uploaded_avatar = await self.bot.get_channel(1099274376005816320).send(file=discord.File(m_team_avatar))
             uploaded_avatar_url = uploaded_avatar.attachments[0].url
             uploaded_avatar_url = uploaded_avatar_url[:uploaded_avatar_url.find("?")]
-            with open(os.path.join(base_dir, "avatar2023.json"), "w") as f:
+            with open(os.path.join(parent_dir, "avatar2023.json"), "w") as f:
                 avatar_dict[team_no] = uploaded_avatar_url
                 f.write(json.dumps(avatar_dict))
             os.remove(m_team_avatar)
