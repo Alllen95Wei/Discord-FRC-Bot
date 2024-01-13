@@ -22,7 +22,7 @@ class RoleGiver(commands.Cog):
             self.bot = bot
             self.real_logger = real_logger
 
-        @discord.ui.button(label="工程技術組", style=discord.ButtonStyle.blurple)
+        @discord.ui.button(label="工程技術組", style=discord.ButtonStyle.blurple, custom_id="engineering")
         async def engineering(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1184087604468121642)
@@ -38,7 +38,7 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="資訊軟體組", style=discord.ButtonStyle.blurple)
+        @discord.ui.button(label="資訊軟體組", style=discord.ButtonStyle.blurple, custom_id="programming")
         async def programming(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1184089055231746118)
@@ -54,7 +54,7 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="活動規劃組", style=discord.ButtonStyle.blurple)
+        @discord.ui.button(label="活動規劃組", style=discord.ButtonStyle.blurple, custom_id="event_planning")
         async def event_planning(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1192497659139854436)
@@ -70,8 +70,8 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="交流公關組", style=discord.ButtonStyle.blurple)
-        async def exchanging(self, button, interaction: discord.Interaction):
+        @discord.ui.button(label="交流公關組", style=discord.ButtonStyle.blurple, custom_id="public_relations")
+        async def public_relations(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1184093105805344818)
             if role not in interaction.user.roles:
@@ -86,7 +86,7 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="美宣設計組", style=discord.ButtonStyle.blurple)
+        @discord.ui.button(label="美宣設計組", style=discord.ButtonStyle.blurple, custom_id="art_design")
         async def art_design(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1184093718060470292)
@@ -102,8 +102,8 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="行政文書組", style=discord.ButtonStyle.blurple)
-        async def admin(self, button, interaction: discord.Interaction):
+        @discord.ui.button(label="行政文書組", style=discord.ButtonStyle.blurple, custom_id="administration")
+        async def administration(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1184094478638784573)
             if role not in interaction.user.roles:
@@ -118,7 +118,7 @@ class RoleGiver(commands.Cog):
                 embed.set_footer(text="如要重新獲得身分組，請再次點擊按鈕")
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        @discord.ui.button(label="教學製作組", style=discord.ButtonStyle.blurple)
+        @discord.ui.button(label="教學製作組", style=discord.ButtonStyle.blurple, custom_id="education")
         async def education(self, button, interaction: discord.Interaction):
             server = self.bot.get_guild(1172902183205871747)
             role = server.get_role(1192497836781224017)
@@ -152,6 +152,10 @@ class RoleGiver(commands.Cog):
         embed.add_field(name="教學製作組", value="製作機器人加工技術、程式撰寫技術、電控配電技術等類型之文檔", inline=False)
         embed.set_footer(text="「每人至多一次加入兩種組別，加入後請負責！」 - 山貓，2024")
         await ctx.send(embed=embed, view=self.JobGiverUI(self.bot, self.real_logger))
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.bot.add_view(self.JobGiverUI(self.bot, self.real_logger))
 
 
 def setup(bot):
