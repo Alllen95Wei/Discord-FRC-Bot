@@ -4,6 +4,7 @@ from discord import Option
 import json
 import os
 from pathlib import Path
+from math import ceil
 
 import logger
 from TBAClient import Team
@@ -164,7 +165,7 @@ class TeamCmd(commands.Cog):
             embeds_list = [embed]
         elif m_team_awards and len(m_team_awards) > 25:
             embeds_list = []
-            pages_count = int(len(m_team_awards) / 25) + 1
+            pages_count = ceil(len(m_team_awards) / 25)
             for j in range(pages_count):
                 temp_team_awards = m_team_awards[:25]
                 embed = discord.Embed(title=f"FRC #{隊號} 的獎項({j + 1}/{pages_count})",

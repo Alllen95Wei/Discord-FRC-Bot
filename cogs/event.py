@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import Option
 import datetime
+from math import ceil
 
 import logger
 from TBAClient import Event
@@ -41,6 +42,7 @@ class EventCmd(commands.Cog):
                                           "zh-TW": "FRC活動代碼。使用/event what_is_event_key指令來取得說明。"}),
                      私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
         await ctx.defer()
+        活動代碼 = 活動代碼.lower()  # noqa
         m_event = Event(活動代碼)
         try:
             m_event_info = m_event.get_info()
@@ -79,6 +81,7 @@ class EventCmd(commands.Cog):
                                            "zh-TW": "FRC活動代碼。使用/event what_is_event_key指令來取得說明。"}),
                       私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
         await ctx.defer()
+        活動代碼 = 活動代碼.lower()  # noqa
         m_event = Event(活動代碼)
         try:
             m_event_teams = m_event.get_team_list()
@@ -108,7 +111,7 @@ class EventCmd(commands.Cog):
             embeds_list = [embed]
         elif m_event_teams and len(m_event_teams) > 25:
             embeds_list = []
-            pages_count = int(len(m_event_teams) / 25) + 1
+            pages_count = ceil(len(m_event_teams) / 25)
             for i in range(pages_count):
                 temp_teams = m_event_teams[:25]
                 embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍({i + 1}/{pages_count})",
