@@ -138,8 +138,8 @@ class RoleGiver(commands.Cog):
                                                                                     857996539262402570])
     @commands.has_role(1193209412018524180)
     async def role_giver(self, ctx):
-        await ctx.respond("即將在此頻道建立職位身分組選取器...", ephemeral=True)
-        embed = discord.Embed(title="選取身分組", description="請選擇你希望負責的工作，以獲得對應的權限。", color=default_color)
+        await ctx.respond("即將在此頻道建立職位選取器...", ephemeral=True)
+        embed = discord.Embed(title="選取組別", description="請選擇你希望負責的工作，以獲得對應的權限。", color=default_color)
         embed.add_field(name="工程技術組", value="製作模擬賽模擬場地&場地布置、負責周邊小物打印製作", inline=False)
         embed.add_field(name="資訊軟體組", value="FMS系統復刻、Discord bot整合系統製作&維護、維護網站、維護PMS系統", inline=False)
         embed.add_field(name=" ", value="---------------", inline=False)
@@ -150,7 +150,7 @@ class RoleGiver(commands.Cog):
         embed.add_field(name="行政文書組", value="聯盟會議記錄、經費管理&紀錄、聯盟財產清冊紀錄(如後續有需求)", inline=False)
         embed.add_field(name=" ", value="---------------", inline=False)
         embed.add_field(name="教學製作組", value="製作機器人加工技術、程式撰寫技術、電控配電技術等類型之文檔", inline=False)
-        embed.set_footer(text="「每人至多一次加入兩種組別，加入後請負責，不要拖延症發作！」 - 山貓，2024")
+        embed.set_footer(text="「每人至多一次加入兩種組別，加入後請負責！」 - 山貓，2024")
         await ctx.send(embed=embed, view=self.JobGiverUI(self.bot, self.real_logger))
 
 
