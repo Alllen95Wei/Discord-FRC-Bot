@@ -53,6 +53,7 @@ class General(commands.Cog):
         await ctx.respond(embed=embed, ephemeral=私人訊息)
 
     @discord.slash_command(name="update", description="更新機器人。")
+    @commands.is_owner()
     async def update(self, ctx,
                      私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
         if ctx.author.id == 657519721138094080:
@@ -87,7 +88,8 @@ class Event(commands.Cog):
                                   description=f"這個指令正在冷卻中，請在`{round(error.retry_after)}`秒後再試。",
                                   color=error_color)
             await ctx.respond(embed=embed, ephemeral=True)
-        elif isinstance(error, commands.NotOwner):
+        elif (isinstance(error, commands.NotOwner) or isinstance(error, commands.MissingRole) or
+              isinstance(error, commands.MissingPermissions)):
             embed = discord.Embed(title="錯誤", description="你沒有權限使用此指令。", color=error_color)
             await ctx.respond(embed=embed, ephemeral=True)
         else:
@@ -96,4 +98,6 @@ class Event(commands.Cog):
 
 def setup(bot):
     bot.add_cog(General(bot, bot.logger))
+    bot.logger.info("\"General\"已被載入。")
     bot.add_cog(Event(bot, bot.logger))
+    bot.logger.info("\"Event\"已被載入。")

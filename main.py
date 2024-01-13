@@ -20,5 +20,18 @@ real_logger = logger.CreateLogger()
 bot.logger = real_logger
 
 
-bot.load_extensions("cogs.general", "cogs.event", "cogs.team")
+@discord.slash_command(name="reload", description="重新載入所有extension以套用最新變更。(請先使用「/update」)")
+@commands.is_owner()
+async def reload(ctx):
+    extension_list = list(bot.extensions)
+    response_context = "已經重新載入以下extension：\n"
+    embed = discord.Embed(title="重新載入", color=0x5FE1EA)
+    for extension in extension_list:
+        bot.reload_extension(extension)
+        response_context += extension + "\n"
+    embed.description = response_context
+    await ctx.respond(embed=embed)
+
+
+bot.load_extensions("cogs.general", "cogs.event", "cogs.team", "cogs.role_giver")
 bot.run(TOKEN)

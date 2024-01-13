@@ -134,3 +134,4 @@ class EventCmd(commands.Cog):
 
 def setup(bot):
     bot.add_cog(EventCmd(bot, bot.logger))
+    bot.logger.info("\"EventCmd\"已被載入。")

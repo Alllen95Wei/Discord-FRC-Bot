@@ -192,3 +192,4 @@ class TeamCmd(commands.Cog):
 
 def setup(bot):
     bot.add_cog(TeamCmd(bot, bot.logger))
+    bot.logger.info("\"TeamCmd\"已被載入。")
