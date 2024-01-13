@@ -137,7 +137,8 @@ class RoleGiver(commands.Cog):
     @discord.slash_command(name="role_giver", description="傳送「選取身分組」訊息", guild_ids=[1172902183205871747,
                                                                                     857996539262402570])
     @commands.has_role(1193209412018524180)
-    async def role_giver(self, ctx: commands.Context):
+    async def role_giver(self, ctx):
+        await ctx.respond("即將在此頻道建立職位身分組選取器...", ephemeral=True)
         embed = discord.Embed(title="選取身分組", description="請選擇你希望負責的工作，以獲得對應的權限。", color=default_color)
         embed.add_field(name="工程技術組", value="製作模擬賽模擬場地&場地布置、負責周邊小物打印製作", inline=False)
         embed.add_field(name="資訊軟體組", value="FMS系統復刻、Discord bot整合系統製作&維護、維護網站、維護PMS系統", inline=False)
