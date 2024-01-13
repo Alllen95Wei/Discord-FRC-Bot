@@ -2,5 +2,5 @@ python-dotenv
 colorlog
 requests
 py-cord
-gitpython
+gitpython>3.1.31
 tzdata
