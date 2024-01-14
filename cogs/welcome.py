@@ -7,7 +7,7 @@ from pathlib import Path
 import logger
 
 error_color = 0xF1411C
-default_color = 0x5FE1EA
+default_color = 0x012a5e
 base_dir = os.path.abspath(os.path.dirname(__file__))
 parent_dir = str(Path(__file__).parent.parent.absolute())
 
