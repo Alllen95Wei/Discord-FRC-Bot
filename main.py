@@ -33,5 +33,5 @@ async def reload(ctx):
     await ctx.respond(embed=embed)
 
 
-bot.load_extensions("cogs.general", "cogs.event", "cogs.team", "cogs.role_giver","cogs.welcome")
+bot.load_extensions("cogs.general", "cogs.event", "cogs.team", "cogs.role_giver", "cogs.welcome")
 bot.run(TOKEN)
