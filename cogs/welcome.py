@@ -12,13 +12,12 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 parent_dir = str(Path(__file__).parent.parent.absolute())
 
 
-class Welcome(commands.cog):
+class WelcomeCmd(commands.Cog):
     def __init__(self, bot: commands.Bot, real_logger: logger.CreateLogger):
         self.bot = bot
         self.real_logger = real_logger
 
-    @discord.slash_command(name="welcome", description="測試加入訊息", guild_ids=[1172902183205871747,
-                                                                            857996539262402570])
+    @discord.slash_command(name="welcome", description="測試加入訊息", guild_ids=[1172902183205871747])
     @commands.has_role(1193209412018524180)
     async def welcome(self, ctx, name: Option(str, required=True)):
         embed = discord.Embed(title="歡迎加入", color=default_color)
@@ -28,5 +27,5 @@ class Welcome(commands.cog):
 
 
 def setup(bot):
-    bot.add_cog(Welcome(bot, bot.logger))
-    bot.logger.info("\"Welcome\"已被載入。")
+    bot.add_cog(WelcomeCmd(bot, bot.logger))
+    bot.logger.info("\"WelcomeCmd\"已被載入。")
