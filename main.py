@@ -21,7 +21,7 @@ bot.logger = real_logger
 
 
 @bot.slash_command(name="reload", description="重新載入所有extension以套用最新變更。(請先使用「/update」)")
-@commands.is_owner()
+@commands.has_role(1193209412018524180)
 async def reload(ctx):
     extension_list = list(bot.extensions)
     response_context = "已經重新載入以下extension：\n"

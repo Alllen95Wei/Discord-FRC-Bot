@@ -19,6 +19,7 @@ class WelcomeCmd(commands.Cog):
 
     @discord.slash_command(name="welcome", description="測試加入訊息", guild_ids=[1172902183205871747])
     @commands.has_role(1193209412018524180)
+    @commands.Cog.listener()
     async def welcome(self, ctx, name: Option(str, required=True)):
         embed = discord.Embed(title="歡迎加入", color=default_color)
         embed.add_field(name=f"歡迎{name}加入TFA的大家庭!", value="加入後請先去<#1188142041906036817>領取組別身分組!",
