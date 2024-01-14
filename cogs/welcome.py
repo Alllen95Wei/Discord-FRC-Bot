@@ -25,7 +25,15 @@ class WelcomeCmd(commands.Cog):
         embed.add_field(name=f"歡迎{name}加入TFA的大家庭!", value="加入後請先去<#1188142041906036817>領取組別身分組!",
                         inline=True)
         await ctx.respond(embed=embed)
-
+        
+async def on_member_join(self, member):  
+    embed = discord.Embed(title="歡迎加入", color=default_color)
+    embed.add_field(name=f"歡迎{member}加入TFA的大家庭!", value="加入後請先去<#1188142041906036817>領取組別身分組!",
+                    inline=True)
+    channel = discord.utils.get(self.bot.get_channel("1172902183717589017"))
+    await channel.send(embed=embed)
+    
+    
 def setup(bot):
     bot.add_cog(WelcomeCmd(bot, bot.logger))
     bot.logger.info("\"WelcomeCmd\"已被載入。")
