@@ -22,3 +22,7 @@ class Welcome(commands.cog):
             embed=discord.Embed(title="歡迎加入", color=0x00ff00)
             embed.add_field(name=f"歡迎{name}加入TFA的大家庭!", value="加入後請先去<#1188142041906036817>領取組別身分組!", inline=True)
             await ctx.send(embed=embed)
+            
+def setup(bot):
+    bot.add_cog(Welcome(bot, bot.logger))
+    bot.logger.info("\"Welcome\"已被載入。")
