@@ -53,7 +53,6 @@ class General(commands.Cog):
 
     @discord.slash_command(name="update", description="更新機器人。", guild_ids=[1172902183205871747])
     @commands.has_role(1193209412018524180)
-    @commands.is_owner
     async def update(self, ctx,
                      私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
         embed = discord.Embed(title="更新中", description="更新流程啟動。", color=default_color)
