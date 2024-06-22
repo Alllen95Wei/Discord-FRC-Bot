@@ -45,7 +45,7 @@ class TeamCmd(commands.Cog):
     @team.command(name="info", description="Gets basic information about the team.",
                   description_localizations={"zh-TW": "取得隊伍的基本資料。"})
     async def info(self, ctx,
-                   隊號: Option(int, min_value=1, max_value=9999, required=True,  # noqa
+                   隊號: Option(int, min_value=1, required=True,  # noqa
                                 name="team_no", name_localizations={"zh-TW": "隊號"},
                                 description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"}),
                    私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
@@ -85,7 +85,7 @@ class TeamCmd(commands.Cog):
     @team.command(name="media", description="Gets social media links of the team.",
                   description_localizations={"zh-TW": "取得隊伍的社交媒體連結。"})
     async def media(self, ctx,
-                    隊號: Option(int, min_value=1, max_value=9999, required=True,  # noqa
+                    隊號: Option(int, min_value=1, required=True,  # noqa
                                  name="team_no", name_localizations={"zh-TW": "隊號"},
                                  description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"}),
                     私人訊息: Option(bool, "是否以私人訊息回應", required=False) = False):  # noqa
@@ -133,7 +133,7 @@ class TeamCmd(commands.Cog):
 
     @team.command(name="awards", description="取得隊伍曾獲得的獎項。")
     async def awards(self, ctx,
-                     隊號: Option(int, min_value=1, max_value=9999, required=True,  # noqa
+                     隊號: Option(int, min_value=1, required=True,  # noqa
                                   name="team_no", name_localizations={"zh-TW": "隊號"},
                                   description="FRC team no.", description_localizations={"zh-TW": "FRC隊伍編號"})):
         await ctx.defer()
