@@ -1,3 +1,4 @@
+# coding=utf-8
 import requests
 import base64
 import os
@@ -11,6 +12,7 @@ TBA_api_key = {"X-TBA-Auth-Key": str(os.getenv("TBA_TOKEN"))}
 FRC_api_url = "https://frc-api.firstinspires.org/v3.0/"
 FRC_api_key = {"Authorization": str(os.getenv("FRC_TOKEN")),
                "If-Modified-Since": ""}
+base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 # TBA API Docs: https://www.thebluealliance.com/apidocs/v3
@@ -104,6 +106,11 @@ class Event:
         else:
             return r
 
+    def save_matches_as_json(self):
+        r = requests.get(self.TBA_url + "/matches", headers=TBA_api_key, timeout=10).text
+        with open(os.path.join(base_dir, "matches", self.key + ".json"), "w") as f:
+            f.write(r)
+
 
 if __name__ == "__main__":
-    print(get_event_keys(2023))
+    print(Event("2024tuis").save_matches_as_json())
