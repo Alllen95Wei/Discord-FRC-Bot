@@ -85,6 +85,7 @@ class EventCmd(commands.Cog):
         m_event = Event(活動代碼)
         try:
             m_event_teams = m_event.get_team_list()
+            m_event_teams.sort(key=lambda team: team["team_number"])
             embed = discord.Embed(title=f"活動 {活動代碼} 的參加隊伍",
                                   description=f"參賽的隊伍(共`{len(m_event_teams)}`支)將列於下方。",
                                   url=f"https://www.thebluealliance.com/event/{活動代碼}",
@@ -121,7 +122,7 @@ class EventCmd(commands.Cog):
                     team_no = m_team["team_number"]
                     team_name = m_team["nickname"]
                     team_link = f"https://www.thebluealliance.com/team/{team_no}"
-                    embed.add_field(name=team_no, value=f"[{team_name}]({team_link})")
+                    embed.add_field(name=team_no, value=f"[{team_name}]({team_link})", inline=True)
                     m_event_teams.remove(m_team)
                 embeds_list.append(embed)
         else:

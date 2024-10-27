@@ -99,7 +99,7 @@ class Event:
         else:
             return r
 
-    def get_team_list(self):
+    def get_team_list(self) -> list[dict]:
         r = requests.get(self.TBA_url + "/teams", headers=TBA_api_key, timeout=10).json()
         if "Error" in r:
             raise ValueError(r["Error"])
@@ -113,4 +113,4 @@ class Event:
 
 
 if __name__ == "__main__":
-    print(Event("2024tuis").save_matches_as_json())
+    print(Event("2025ntwc").get_team_list())
